@@ -59,7 +59,7 @@ if [[ $step =~ (^|,)1(,|$)  || $step == "*" ]]; then
 	if [[ FB_DEV_VERSION ]]
 	then
 		if [[ `echo "$FB_DEV_VERSION < 3.0" | bc` -eq 1 ]]; then
-			read -e -p "Firebird Operation Mode (classic, super, superclassic): " -i $FB_DEF_OP_MODE $FB_DEF_OP_MODE
+			FB_DEF_OP_MODE="superclassic"
 			FB_PACKAGE=firebird${FB_DEV_VERSION}-${FB_DEF_OP_MODE}
 		else
 			FB_PACKAGE=firebird${FB_DEV_VERSION}-server
@@ -76,7 +76,7 @@ if [[ $step =~ (^|,)1(,|$)  || $step == "*" ]]; then
 		apache2 libapache2-mod-perl2 libapreq2-3 libapreq2-dev
 		libapache2-mod-perl2-dev libexpat1 libexpat1-dev libapache2-request-perl cpanminus)
 	sudo apt-get -y install ${packages[@]}
-	sudo dpkg-reconfigure $FB_PACKAGE # In some cases default dialog just doesn't configure SYSDBA user
+	# sudo dpkg-reconfigure $FB_PACKAGE # In some cases default dialog just doesn't configure SYSDBA user
 	echo "ok"
 else
 	echo "skip"
@@ -252,11 +252,7 @@ fi
 echo "8. Configure and init cats database... "
 if [[ ($step =~ (^|,)8(,|$) || $step == "*") && $FB_DEV_VERSION ]]; then
 	firebird="1"
-	dbms=""
-	while [ "$dbms" != "1" -a "$dbms" != "2" ]; do
-		echo -e "Choose DBMS:\n  1. Firebird\n  2. Postgres"
-		read dbms
-	done
+	dbms="2"
 
 	CONFIG_NAME="Config.pm"
 	CONFIG_ROOT="${CATS_ROOT}/cgi-bin/cats-problem/CATS"
@@ -273,11 +269,7 @@ if [[ ($step =~ (^|,)8(,|$) || $step == "*") && $FB_DEV_VERSION ]]; then
 
 	echo -e "...\n...\n..."
 
-	answer=""
-	while [ "$answer" != "y" -a "$answer" != "n" ]; do
-	   echo -n "Do you want to do the automatic setup? "
-	   read answer
-	done
+	answer="y"
 
 	if [ "$answer" = "n" ]; then
 	   echo -e "Setup is done, you need to do following manualy:\n"
@@ -289,9 +281,9 @@ if [[ ($step =~ (^|,)8(,|$) || $step == "*") && $FB_DEV_VERSION ]]; then
 	fi
 
 	def_db_host="localhost"
-	read -e -p "Host: " -i $def_db_host db_host
-	read -e -p "Username: " db_user
-	read -e -p "Password: " db_pass
+	db_host="localhost"
+	db_user="db_user"
+	db_pass="dp_pass"
 
 	if [[ "$dbms" = "$firebird" ]]; then
 		def_path_to_db="$HOME/.cats/cats.fdb"
