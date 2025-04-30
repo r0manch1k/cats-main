@@ -56,19 +56,6 @@ packages=(firebird-dev)
 
 echo "1. Install apt packages... "
 if [[ $step =~ (^|,)1(,|$)  || $step == "*" ]]; then
-	if [[ FB_DEV_VERSION ]]
-	then
-		if [[ `echo "$FB_DEV_VERSION < 3.0" | bc` -eq 1 ]]; then
-			FB_DEF_OP_MODE="superclassic"
-			FB_PACKAGE=firebird${FB_DEV_VERSION}-${FB_DEF_OP_MODE}
-		else
-			FB_PACKAGE=firebird${FB_DEV_VERSION}-server
-		fi
-		packages+=($FB_PACKAGE)
-	else
-		echo "Can't find a proper firebird-dev package"
-	fi
-
 	packages+=(
 		git unzip wget build-essential
 		libaspell-dev aspell-en aspell-ru
@@ -250,26 +237,22 @@ else
 fi
 
 echo "8. Configure and init cats database... "
-if [[ ($step =~ (^|,)8(,|$) || $step == "*") && $FB_DEV_VERSION ]]; then
-	firebird="1"
+if [[ ($step =~ (^|,)8(,|$) || $step == "*") ]]; then
 	dbms="2"
 
 	CONFIG_NAME="Config.pm"
 	CONFIG_ROOT="${CATS_ROOT}/cgi-bin/cats-problem/CATS"
 	CREATE_DB_NAME="create_db.sql"
 	CREATE_DB_ROOT="${CATS_ROOT}/sql/"
-	if [[ "$dbms" = "$firebird" ]]; then
-		CREATE_DB_ROOT+="interbase"
-	else
-		sudo apt-get -y install "postgresql" "libpq-dev"
-		sudo service postgresql restart
-		sudo cpanm -S "DBD::Pg"
-		CREATE_DB_ROOT+="postgres"
-	fi
+	
+	sudo apt-get -y install "postgresql" "libpq-dev"
+	sudo service postgresql restart
+	sudo cpanm -S "DBD::Pg"
+	CREATE_DB_ROOT+="postgres"
 
 	echo -e "...\n...\n..."
 
-	answer="y"
+	answer="y" # change if auto setup is not needed
 
 	if [ "$answer" = "n" ]; then
 	   echo -e "Setup is done, you need to do following manualy:\n"
@@ -285,34 +268,10 @@ if [[ ($step =~ (^|,)8(,|$) || $step == "*") && $FB_DEV_VERSION ]]; then
 	db_user="db_user"
 	db_pass="dp_pass"
 
-	if [[ "$dbms" = "$firebird" ]]; then
-		def_path_to_db="$HOME/.cats/cats.fdb"
-		read -e -p "Path to database: " -i $def_path_to_db path_to_db
+	perl -I "$CATS_ROOT/cgi-bin" -MCATS::Deploy -e \
+		"CATS::Deploy::create_db postgres, cats, '$db_user', '$db_pass', pg_auth_type => peer,
+			init_config => 1, host => '$db_host', quiet => 1"
 
-		FB_ALIASES="/etc/firebird/${FB_DEV_VERSION}/"
-		# aliases.conf is replaced by databases.conf in firebird 3.x
-		FB_ALIASES=$FB_ALIASES$([ `echo "$FB_DEV_VERSION < 3.0" | bc` -eq 1 ] && 
-							       echo "aliases.conf" || echo "databases.conf")
-		
-		alias="cats = $path_to_db"
-		has_alias=$(sudo cat $FB_ALIASES | grep -c "$alias")
-		if [ $has_alias -eq 0 ]; then
-			sudo sh -c "echo 'cats = $path_to_db' >> $FB_ALIASES"
-		fi
-
-		if [[ "$path_to_db" = "$def_path_to_db" ]]; then
-			mkdir "$HOME/.cats"
-		fi
-		sudo chown firebird.firebird $(dirname "$path_to_db")
-
-		perl -I "$CATS_ROOT/cgi-bin" -MCATS::Deploy -e \
-			"CATS::Deploy::create_db interbase, cats, '$db_user', '$db_pass', init_config => 1,
-				host => '$db_host', quiet => 1"
-	else
-		perl -I "$CATS_ROOT/cgi-bin" -MCATS::Deploy -e \
-			"CATS::Deploy::create_db postgres, cats, '$db_user', '$db_pass', pg_auth_type => peer,
-				init_config => 1, host => '$db_host', quiet => 1"
-	fi
 	echo "ok"
 else
 	echo "skip"

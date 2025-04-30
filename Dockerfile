@@ -1,12 +1,9 @@
-# Используем базовый образ Ubuntu
 FROM ubuntu:20.04
 
-# Устанавливаем переменные окружения для работы без интерактива
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -y gnupg
+RUN apt-get update && apt-get install -y gnupg
 
-# Обновляем пакеты и устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
     sudo \
     wget \
@@ -20,41 +17,18 @@ RUN apt-get update && apt-get install -y \
     cpanminus postgresql libpq-dev \
     && apt-get clean
 
-# Устанавливаем рабочую директорию
-WORKDIR /home/pdf/cats/cats-main
+WORKDIR /home
+RUN git clone https://github.com/r0manch1k/cats-main.git
 
-# Копируем все файлы проекта в контейнер
-COPY . .
+WORKDIR /home/cats-main
 
-# Делаем скрипт исполняемым
 RUN chmod +x deploy.bash
 
-# Устанавливаем Perl-зависимости через cpanminus
-RUN cpanm -S \
-    Module::Install \
-    DBI \
-    DBI::Profile \
-    DBD::Pg \
-    Algorithm::Diff \
-    Apache2::Request \
-    Archive::Zip \
-    Authen::Passphrase \
-    File::Copy::Recursive \
-    JSON::XS \
-    SQL::Abstract \
-    Template \
-    Test::Exception \
-    Text::Aspell \
-    Text::CSV \
-    Text::Hunspell \
-    Text::MultiMarkdown \
-    XML::Parser::Expat
-
-# Запускаем скрипт установки
 RUN ./deploy.bash
 
-# Открываем порт 80 для Apache
 EXPOSE 80
 
-# Запускаем Apache в режиме демона
-CMD ["apachectl", "-D", "FOREGROUND"]
+RUN chown -R www-data:www-data /home/cats-main
+RUN chmod -R 775 /home/cats-main
+
+CMD service postgresql start && apachectl -D FOREGROUND

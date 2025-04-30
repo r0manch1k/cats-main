@@ -1,0 +1,8 @@
+services:
+  cats-main:
+    container_name: cats-main
+    build:
+      context: .
+    ports:
+      - "80:80"
+    restart: unless-stopped
