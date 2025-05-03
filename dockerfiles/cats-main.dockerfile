@@ -17,10 +17,9 @@ RUN apt-get update && apt-get install -y \
     cpanminus postgresql libpq-dev \
     && apt-get clean
 
-WORKDIR /home
-RUN git clone https://github.com/r0manch1k/cats-main.git
-
 WORKDIR /home/cats-main
+
+COPY . .
 
 RUN chmod +x deploy.bash
 

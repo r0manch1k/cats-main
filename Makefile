@@ -1,4 +1,7 @@
-DOCKER_COMPOSE = docker compose
+-include .env
+export
+
+DOCKER_COMPOSE = docker compose --env-file .env
 
 # CLEANING
 
@@ -32,6 +35,10 @@ rm-all: rm-volumes rm-images rm-containers rm-system rm-networks
 .PHONY: build
 build:
 	$(DOCKER_COMPOSE) build
+
+.PHONY: build-container
+build-container:
+	$(DOCKER_COMPOSE) build $(SERVICE)
 
 .PHONY: up
 up:

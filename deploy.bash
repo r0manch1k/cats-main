@@ -41,19 +41,6 @@ CATS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # assume, that scr
 # Group, apache running under
 http_group=www-data
 
-FB_DEV_VERSION=`sudo apt-cache pkgnames | grep firebird-dev`
-FB_DEV_VERSION=`sudo apt-cache show firebird-dev | grep Version`
-[[ $FB_DEV_VERSION =~ ([0-9]+\.[0-9]+) ]]
-FB_DEV_VERSION=${BASH_REMATCH[1]}
-FB_DEF_OP_MODE='superclassic'
-packages=(firebird-dev)
-
-# The firebird-dev package may contain different verisons of Firebird.
-# It depends on platform you're using.
-# Packages firebird2.*-(classic|super|superclassic) are mutually exclusive.
-# Firebird 3.0 and higher allows to switch Operation Mode in the
-# /etc/firebird/3.*/firebird.conf
-
 echo "1. Install apt packages... "
 if [[ $step =~ (^|,)1(,|$)  || $step == "*" ]]; then
 	packages+=(
@@ -63,7 +50,6 @@ if [[ $step =~ (^|,)1(,|$)  || $step == "*" ]]; then
 		apache2 libapache2-mod-perl2 libapreq2-3 libapreq2-dev
 		libapache2-mod-perl2-dev libexpat1 libexpat1-dev libapache2-request-perl cpanminus)
 	sudo apt-get -y install ${packages[@]}
-	# sudo dpkg-reconfigure $FB_PACKAGE # In some cases default dialog just doesn't configure SYSDBA user
 	echo "ok"
 else
 	echo "skip"
@@ -75,7 +61,7 @@ if [[ $step =~ (^|,)2(,|$) || $step == "*" ]]; then
 		Module::Install
 		DBI
 		DBI::Profile
-		DBD::Firebird
+		DBD::Pg
 
 		Algorithm::Diff
 		Apache2::Request
@@ -92,7 +78,7 @@ if [[ $step =~ (^|,)2(,|$) || $step == "*" ]]; then
 		Text::MultiMarkdown
 		XML::Parser::Expat
 	)
-	sudo cpanm -S ${cpan_packages[@]}
+	sudo cpanm --notest -S ${cpan_packages[@]}
 	echo "ok"
 else
 	echo "skip"
@@ -236,43 +222,3 @@ else
 	echo "skip"
 fi
 
-echo "8. Configure and init cats database... "
-if [[ ($step =~ (^|,)8(,|$) || $step == "*") ]]; then
-	dbms="2"
-
-	CONFIG_NAME="Config.pm"
-	CONFIG_ROOT="${CATS_ROOT}/cgi-bin/cats-problem/CATS"
-	CREATE_DB_NAME="create_db.sql"
-	CREATE_DB_ROOT="${CATS_ROOT}/sql/"
-	
-	sudo apt-get -y install "postgresql" "libpq-dev"
-	sudo service postgresql restart
-	sudo cpanm -S "DBD::Pg"
-	CREATE_DB_ROOT+="postgres"
-
-	echo -e "...\n...\n..."
-
-	answer="y" # change if auto setup is not needed
-
-	if [ "$answer" = "n" ]; then
-	   echo -e "Setup is done, you need to do following manualy:\n"
-	   echo -e " 1. Navigate to ${CONFIG_ROOT}/"
-	   echo -e " 2. Adjust your database connection settings in ${CONFIG_NAME}"
-	   echo -e " 3. Navigate to ${CREATE_DB_ROOT}/"
-	   echo -e " 4. Adjust your database connection settings in ${CREATE_DB_NAME} and create database\n"
-	   exit 0
-	fi
-
-	def_db_host="localhost"
-	db_host="localhost"
-	db_user="db_user"
-	db_pass="dp_pass"
-
-	perl -I "$CATS_ROOT/cgi-bin" -MCATS::Deploy -e \
-		"CATS::Deploy::create_db postgres, cats, '$db_user', '$db_pass', pg_auth_type => peer,
-			init_config => 1, host => '$db_host', quiet => 1"
-
-	echo "ok"
-else
-	echo "skip"
-fi
