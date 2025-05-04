@@ -36,8 +36,8 @@ rm-all: rm-volumes rm-images rm-containers rm-system rm-networks
 build:
 	$(DOCKER_COMPOSE) build
 
-.PHONY: build-container
-build-container:
+.PHONY: build-service
+build-service:
 	$(DOCKER_COMPOSE) build $(SERVICE)
 
 .PHONY: up
@@ -46,7 +46,7 @@ up:
 
 .PHONY: up-service
 up-service:
-	$(DOCKER_COMPOSE) up -d --no-deps --build $(SERVICE)
+	$(DOCKER_COMPOSE) up -d --no-deps $(SERVICE)
 
 .PHONY: up-logs
 up-logs:
@@ -54,7 +54,7 @@ up-logs:
 
 .PHONY: up-logs-service
 up-logs-service:
-	$(DOCKER_COMPOSE) up --no-deps --build $(SERVICE)
+	$(DOCKER_COMPOSE) up --no-deps $(SERVICE)
 
 .PHONY: down
 down:

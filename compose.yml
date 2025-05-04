@@ -35,6 +35,13 @@ services:
       timeout: 5s
       retries: 5
 
+  judge:
+    container_name: cats-judge
+    build:
+      context: ./cats-judge
+  
+
+
 volumes:
   v-postgres:
   v-problems:
