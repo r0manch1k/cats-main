@@ -494,7 +494,7 @@ sub problems_frame {
         INNER JOIN contests CC ON CC.id = CP.contest_id
         LEFT JOIN limits L ON L.id = CP.limits_id
         $contests_sql$hidden_problems~ .
-        $lv->maybe_where_cond . $lv->order_by('CC.start_date')
+        $lv->maybe_where_cond . ' ' . $lv->order_by('CC.start_date')
     );
     $sth->execute(@contests_params, $lv->where_params);
 

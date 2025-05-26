@@ -1,12 +1,12 @@
 services:
-  cats-main:
+  main:
     container_name: cats-main
     build:
       context: ./
       dockerfile: dockerfiles/cats-main.dockerfile
     volumes:
       - ./cgi-bin/cats-problem:/home/cats-main/cgi-bin/cats-problem
-      - ./logs/apache2:/var/log/apache2/error.log
+      # - ./logs/apache2:/var/log/apache2/error.log
     ports:
       - "80:80"
     restart: unless-stopped
@@ -27,10 +27,10 @@ services:
       - "5432:5432"
     volumes:
       - v-postgres:/var/lib/postgresql/data
-      - ./logs/postgresql:/var/log/postgresql/postgresql-17-main.log
+      # - ./logs/postgresql:/var/log/postgresql/postgresql-17-main.log
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-db_user} -d", "${POSTGRES_DB:-db_name}"]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-db_user} -d", "${POSTGRES_DB:-db_name}", "-h", "localhost"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -39,8 +39,11 @@ services:
     container_name: cats-judge
     build:
       context: ./cats-judge
-  
-
+    volumes:
+      - ./cats-judge/dockerfiles/Config.pm:/app/lib/cats-problem/CATS/Config.pm
+      - ./cats-judge/dockerfiles/local.xml:/app/config/local.xml
+    depends_on:
+      - postgres
 
 volumes:
   v-postgres:

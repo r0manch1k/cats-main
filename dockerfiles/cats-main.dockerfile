@@ -17,9 +17,11 @@ RUN apt-get update && apt-get install -y \
     cpanminus postgresql libpq-dev \
     && apt-get clean
 
-WORKDIR /home/cats-main
+WORKDIR /app
 
 COPY . .
+
+COPY dockerfiles/Config.pm /app/cgi-bin/cats-problem/CATS/Config.pm
 
 RUN chmod +x deploy.bash
 
@@ -27,7 +29,7 @@ RUN ./deploy.bash
 
 EXPOSE 80
 
-RUN chown -R www-data:www-data /home/cats-main
-RUN chmod -R 775 /home/cats-main
+RUN chown -R www-data:www-data /app
+RUN chmod -R 775 /app
 
-CMD service postgresql start && apachectl -D FOREGROUND
+CMD apachectl -D FOREGROUND

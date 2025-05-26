@@ -10,7 +10,7 @@ else
 fi
 
 echo "Configuring PostgreSQL..."
-{ echo "host $POSTGRES_DB $POSTGRES_USER all md5"; cat /etc/postgresql/17/main/pg_hba.conf; } > /tmp/pg_hba.tmp && mv /tmp/pg_hba.tmp /etc/postgresql/17/main/pg_hba.conf
+{ echo "host $POSTGRES_DB $POSTGRES_USER 0.0.0.0/0 md5"; cat /etc/postgresql/17/main/pg_hba.conf; } > /tmp/pg_hba.tmp && mv /tmp/pg_hba.tmp /etc/postgresql/17/main/pg_hba.conf
 
 echo "Reloading PostgreSQL configuration..."
 service postgresql reload
@@ -19,7 +19,7 @@ echo "Starting PostgreSQL..."
 service postgresql start
 
 echo "Waiting for PostgreSQL to become ready..."
-until pg_isready -d "$POSTGRES_DB" -U "$POSTGRES_USER"; do
+until pg_isready -d "$POSTGRES_DB" -U "$POSTGRES_USER" -h localhost; do
     sleep 1
 done
 

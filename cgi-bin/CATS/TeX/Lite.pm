@@ -365,8 +365,8 @@ sub convert_text {
     while ($text =~ s/\\($text_cmd_re){([^{}]+)}/tag($text_commands{$1}, $2)/eg) {}
     $text =~ s/\\subsection\*?{([^}]+)}/<h4>$1<\/h4>/g;
     $text =~ s~\\(begin|end){($text_env_re)}~'<' . ($1 eq 'end' ? '/' : '') . "$text_envs{$2}>"~eg;
-    $text =~ s/\\begin{verbatim}/<pre><code language="">/g;
-    $text =~ s/\\end{verbatim}/<\/code><\/pre>/g;
+    $text =~ s/\\begin\{verbatim\}/<pre><code language="">/g;
+    $text =~ s/\\end\{verbatim\}/<\/code><\/pre>/g;
     $text =~ s/\\item\s(.*)\n/<li>$1<\/li>\n/g;
     $text =~ s/\\includegraphics(?:\[[^\]]+\])?{([^}]+)}/<img src="$1"\/>/g;
 

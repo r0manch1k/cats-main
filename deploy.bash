@@ -62,7 +62,6 @@ if [[ $step =~ (^|,)2(,|$) || $step == "*" ]]; then
 		DBI
 		DBI::Profile
 		DBD::Pg
-
 		Algorithm::Diff
 		Apache2::Request
 		Archive::Zip
