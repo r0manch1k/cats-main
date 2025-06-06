@@ -160,7 +160,7 @@ sub jobs_frame {
             ($lv->visible_cols->{Ls} ? $fields_sql->{log_size} : 'NULL') . ' AS log_size',
         ], $where
     );
-    my $sth = $dbh->prepare($q . $lv->order_by);
+    my $sth = $dbh->prepare($q . ' ' . $lv->order_by);
     $sth->execute(@bind);
 
     my $href_details = sub {

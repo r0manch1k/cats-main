@@ -6,7 +6,8 @@ services:
       dockerfile: dockerfiles/cats-main.dockerfile
     volumes:
       - ./cgi-bin/cats-problem:/home/cats-main/cgi-bin/cats-problem
-      # - ./logs/apache2:/var/log/apache2/error.log
+      - ./logs/apache2:/var/log/apache2
+      - ./cgi-bin/CATS:/home/cats-main/cgi-bin/CATS
     ports:
       - "80:80"
     restart: unless-stopped
@@ -27,7 +28,7 @@ services:
       - "5432:5432"
     volumes:
       - v-postgres:/var/lib/postgresql/data
-      # - ./logs/postgresql:/var/log/postgresql/postgresql-17-main.log
+      - ./logs/postgresql:/var/log/postgresql
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-db_user} -d", "${POSTGRES_DB:-db_name}", "-h", "localhost"]
@@ -44,6 +45,7 @@ services:
       - ./cats-judge/dockerfiles/local.xml:/app/config/local.xml
     depends_on:
       - postgres
+    restart: always
 
 volumes:
   v-postgres:
