@@ -5,9 +5,12 @@ services:
       context: ./
       dockerfile: dockerfiles/cats-main.dockerfile
     volumes:
-      - ./cgi-bin/cats-problem:/home/cats-main/cgi-bin/cats-problem
-      - ./logs/apache2:/var/log/apache2
-      - ./cgi-bin/CATS:/home/cats-main/cgi-bin/CATS
+      # - ./cgi-bin/cats-problem:/home/cats-main/cgi-bin/cats-problem
+      # - ./cgi-bin/CATS:/home/cats-main/cgi-bin/CATS
+      - type: bind
+        source: ./dockerfiles/main/Config.pm
+        target: /app/cgi-bin/cats-problem/CATS/Config.pm
+      - ./var/log/apache2:/var/log/apache2
     ports:
       - "80:80"
     restart: unless-stopped
@@ -20,18 +23,18 @@ services:
       context: ./
       dockerfile: dockerfiles/postgres.dockerfile
     environment:
-      POSTGRES_USER: "${POSTGRES_USER:-db_user}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-db_pass}"
-      POSTGRES_DB: "${POSTGRES_DB:-db_name}"
-      POSTGRES_HOST: "${POSTGRES_HOST:-postgres}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
     ports:
       - "5432:5432"
     volumes:
       - v-postgres:/var/lib/postgresql/data
-      - ./logs/postgresql:/var/log/postgresql
+      - ./var/log/postgresql:/var/log/postgresql
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-db_user} -d", "${POSTGRES_DB:-db_name}", "-h", "localhost"]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER} -d", "${POSTGRES_DB}", "-h", "localhost"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -41,8 +44,12 @@ services:
     build:
       context: ./cats-judge
     volumes:
-      - ./cats-judge/dockerfiles/Config.pm:/app/lib/cats-problem/CATS/Config.pm
-      - ./cats-judge/dockerfiles/local.xml:/app/config/local.xml
+      - type: bind
+        source: ./cats-judge/dockerfiles/judge/Config.pm
+        target: /app/lib/cats-problem/CATS/Config.pm
+      - type: bind
+        source: ./cats-judge/dockerfiles/judge/local.xml
+        target: /app/config/local.xml
     depends_on:
       - postgres
     restart: always
