@@ -1,0 +1,41 @@
+name: Cats CI/CD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    name: Deploy Cats
+    runs-on: [ self-hosted, linux, x64 ]
+    environment: production
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup environment
+      run: |
+        echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env.local
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env.local
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env.local
+        echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env.local
+        echo "POSTGRES_HOST_PORT=${{ secrets.POSTGRES_HOST_PORT }}" >> .env.local
+        echo "CATS_MAIN_HOST_PORT=${{ secrets.CATS_MAIN_HOST_PORT }}" >> .env.local
+      shell: bash
+
+    - name: Install dependencies
+      run: python -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+
+    - name: Run Python script
+      run: python render.py
+
+    - name: Down Compose
+      run: make down
+
+    - name: Docker Compose build
+      run: make build
+
+    - name: Docker Compose up
+      run: make up

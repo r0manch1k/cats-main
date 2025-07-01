@@ -12,7 +12,7 @@ services:
         target: /app/cgi-bin/cats-problem/CATS/Config.pm
       - ./var/log/apache2:/var/log/apache2
     ports:
-      - "80:80"
+      - "${CATS_MAIN_HOST_PORT}:80"
     restart: unless-stopped
     depends_on:
       - postgres
@@ -28,19 +28,26 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
     ports:
-      - "5432:5432"
+      - "${POSTGRES_HOST_PORT}:5432"
     volumes:
-      - v-postgres:/var/lib/postgresql/data
-      - ./var/log/postgresql:/var/log/postgresql
+#      - v-postgres:/var/lib/postgresql/17/main
+      - v-postgres-data:/var/lib/postgresql/17/main
+      - v-postgres-conf:/etc/postgresql/17/main
+#      - type: bind
+#        source: ./psql.bash
+#        target: /app/psql.bash
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER} -d", "${POSTGRES_DB}", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
   judge:
     container_name: cats-judge
+    privileged: true
+#    image: registry.mesenev.ru/mesenev/cats-judge:latest
     build:
       context: ./cats-judge
     volumes:
@@ -51,10 +58,14 @@ services:
         source: ./cats-judge/dockerfiles/judge/local.xml
         target: /app/config/local.xml
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+        restart: true
     restart: always
 
 volumes:
   v-postgres:
+  v-postgres-data:
+  v-postgres-conf:
   v-problems:
   v-media:

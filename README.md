@@ -21,7 +21,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-
 ## Installation on Linux
 
 To install CATS you need to have `git` and `sudo` installed:

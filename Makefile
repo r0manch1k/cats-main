@@ -5,30 +5,30 @@ DOCKER_COMPOSE = docker compose --env-file .env.local
 
 # CLEANING
 
-.PHONY: rm-volumes
-rm-volumes:
-	$(DOCKER_COMPOSE) down -v
-	docker volume prune -a -f
+# .PHONY: rm-volumes
+# rm-volumes:
+# 	$(DOCKER_COMPOSE) down -v
+# 	docker volume prune -a -f
 
-.PHONY: rm-images
-rm-images:
-	$(DOCKER_COMPOSE) down --rmi all
-	docker image prune -a -f
+# .PHONY: rm-images
+# rm-images:
+# 	$(DOCKER_COMPOSE) down --rmi all
+# 	docker image prune -a -f
 
-.PHONY: rm-containers
-rm-containers:
-	docker container prune -f
+# .PHONY: rm-containers
+# rm-containers:
+# 	docker container prune -f
 
-.PHONY: rm-networks
-rm-networks:
-	docker network prune -f
+# .PHONY: rm-networks
+# rm-networks:
+# 	docker network prune -f
 
-.PHONY: rm-system
-rm-system: 
-	docker system prune --volumes -f
+# .PHONY: rm-system
+# rm-system: 
+# 	docker system prune --volumes -f
 
-.PHONY: rm-all
-rm-all: rm-volumes rm-images rm-containers rm-system rm-networks
+# .PHONY: rm-all
+# rm-all: rm-volumes rm-images rm-containers rm-system rm-networks
 
 # DOCKER
 
@@ -39,7 +39,7 @@ build:
 .PHONY: build-logs
 build-logs:
 	$(DOCKER_COMPOSE) build --progress=plain
-	
+
 .PHONY: build-service
 build-service:
 	$(DOCKER_COMPOSE) build $(SERVICE)

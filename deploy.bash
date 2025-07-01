@@ -201,6 +201,10 @@ EOF
 	sudo a2dissite 000-default
 	sudo a2enmod expires
 	sudo a2enmod apreq2
+
+	echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/servername.conf
+	sudo a2enconf servername
+
 	# Adjust permissions.
 	sudo chgrp -R ${http_group} cgi-bin css download images static tt
 	chmod -R g+r cgi-bin

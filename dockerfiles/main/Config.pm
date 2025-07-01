@@ -14,10 +14,10 @@ use FindBin;
 use File::Spec;
 
 our $db = {
-    name => 'db_name',
+    name => 'cats',
     driver => 'Pg',
-    user => 'db_user',
-    password => 'db_pass',
+    user => 'cats',
+    password => 'I5zPSDD2-efOi-z9n5w',
     host => 'postgres',
     role => '',
 };

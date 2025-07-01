@@ -20,3 +20,5 @@ var/log/postgresql/*
 dockerfiles/main/Config.pm
 
 .env.local
+
+venv

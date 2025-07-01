@@ -17,7 +17,7 @@ RUN cpanm --notest -S YAML::Tiny Module::Install DBI DBI::Profile DBD::Pg
 
 EXPOSE 5432
 
-WORKDIR /cats-postgres
+WORKDIR /app
 
 COPY . .
 
