@@ -2,9 +2,9 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y gnupg
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update && apt-get install -y gnupg
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
     sudo \
     wget \
     curl \
@@ -21,7 +21,7 @@ WORKDIR /app
 
 COPY . .
 
-COPY dockerfiles/Config.pm /app/cgi-bin/cats-problem/CATS/Config.pm
+COPY dockerfiles/main/Config.pm /app/cgi-bin/cats-problem/CATS/Config.pm
 
 RUN chmod +x deploy.bash
 

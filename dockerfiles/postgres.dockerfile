@@ -2,9 +2,9 @@ FROM postgres:17
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y gnupg
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update && apt-get install -y gnupg
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
     sudo \
     wget \
     curl \

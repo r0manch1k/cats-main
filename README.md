@@ -7,6 +7,21 @@
 CATS is a software for managing programming problems, organizing competitions,
 and supporting continuous learning process of programming-related subjects.
 
+## Docker
+
+Set environment variables inside `.env.local`:
+```
+cp .env .env.local
+```
+
+Setup `venv` for python script:
+```
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+
 ## Installation on Linux
 
 To install CATS you need to have `git` and `sudo` installed:

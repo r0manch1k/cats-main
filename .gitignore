@@ -14,6 +14,9 @@ sql/interbase/init_data.sql
 sql/postgres/create_db.sql
 sql/postgres/init_data.sql
 
-var/log/**
-# ?
-.env
+var/log/apache2/*
+var/log/postgresql/*
+
+dockerfiles/main/Config.pm
+
+.env.local

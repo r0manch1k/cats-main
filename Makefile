@@ -1,7 +1,7 @@
--include .env
+-include .env.local
 export
 
-DOCKER_COMPOSE = docker compose --env-file .env
+DOCKER_COMPOSE = docker compose --env-file .env.local
 
 # CLEANING
 
@@ -36,6 +36,10 @@ rm-all: rm-volumes rm-images rm-containers rm-system rm-networks
 build:
 	$(DOCKER_COMPOSE) build
 
+.PHONY: build-logs
+build-logs:
+	$(DOCKER_COMPOSE) build --progress=plain
+	
 .PHONY: build-service
 build-service:
 	$(DOCKER_COMPOSE) build $(SERVICE)
