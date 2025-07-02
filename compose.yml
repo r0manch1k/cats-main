@@ -47,9 +47,9 @@ services:
   judge:
     container_name: cats-judge
     privileged: true
-#    image: registry.mesenev.ru/mesenev/cats-judge:latest
-    build:
-      context: ./cats-judge
+    image: registry.mesenev.ru/mesenev/cats-judge:latest
+#    build:
+#      context: ./cats-judge
     volumes:
       - type: bind
         source: ./cats-judge/dockerfiles/judge/Config.pm
