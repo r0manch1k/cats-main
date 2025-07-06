@@ -29,6 +29,7 @@ services:
     volumes:
       - v-postgres-data:/var/lib/postgresql/17/main
       - v-postgres-conf:/etc/postgresql/17/main
+      - v-postgres-log:/var/log/postgresql
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -54,5 +55,6 @@ services:
 volumes:
   v-postgres-data:
   v-postgres-conf:
+  v-postgres-log:
   v-problems:
   v-media:
