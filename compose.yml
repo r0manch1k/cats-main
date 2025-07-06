@@ -8,7 +8,7 @@ services:
       - type: bind
         source: ./dockerfiles/main/Config.pm
         target: /app/cgi-bin/cats-problem/CATS/Config.pm
-      - ./var/log/apache2:/var/log/apache2
+      - v-main-apache-log:/var/log/apache2
     ports:
       - "${CATS_MAIN_HOST_PORT}:80"
     restart: unless-stopped
@@ -50,6 +50,7 @@ services:
     restart: always
 
 volumes:
+  v-main-apache-log:
   v-postgres-data:
   v-postgres-conf:
   v-postgres-log:
