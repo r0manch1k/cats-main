@@ -4,9 +4,6 @@ services:
     build:
       context: ./
       dockerfile: dockerfiles/cats-main.dockerfile
-    volumes:
-      # - ./cgi-bin/cats-problem:/home/cats-main/cgi-bin/cats-problem
-      # - ./cgi-bin/CATS:/home/cats-main/cgi-bin/CATS
       - type: bind
         source: ./dockerfiles/main/Config.pm
         target: /app/cgi-bin/cats-problem/CATS/Config.pm
@@ -16,7 +13,7 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-  
+
   postgres:
     container_name: cats-postgres
     build:
@@ -30,12 +27,8 @@ services:
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     volumes:
-#      - v-postgres:/var/lib/postgresql/17/main
       - v-postgres-data:/var/lib/postgresql/17/main
       - v-postgres-conf:/etc/postgresql/17/main
-#      - type: bind
-#        source: ./psql.bash
-#        target: /app/psql.bash
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -48,15 +41,10 @@ services:
     container_name: cats-judge
     privileged: true
     image: registry.mesenev.ru/mesenev/cats-judge:latest
-#    build:
-#      context: ./cats-judge
     volumes:
       - type: bind
         source: ./cats-judge/dockerfiles/judge/Config.pm
         target: /app/lib/cats-problem/CATS/Config.pm
-      - type: bind
-        source: ./cats-judge/dockerfiles/judge/local.xml
-        target: /app/config/local.xml
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,7 +52,6 @@ services:
     restart: always
 
 volumes:
-  v-postgres:
   v-postgres-data:
   v-postgres-conf:
   v-problems:
