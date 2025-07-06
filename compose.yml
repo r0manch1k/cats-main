@@ -43,10 +43,6 @@ services:
     container_name: cats-judge
     privileged: true
     image: registry.mesenev.ru/mesenev/cats-judge:latest
-    volumes:
-      - type: bind
-        source: ./cats-judge/dockerfiles/judge/Config.pm
-        target: /app/lib/cats-problem/CATS/Config.pm
     depends_on:
       postgres:
         condition: service_healthy
