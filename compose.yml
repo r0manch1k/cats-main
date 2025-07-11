@@ -1,7 +1,7 @@
 services:
   main:
     container_name: cats-main
-    env-file: .env
+    env_file: .env
     build:
       context: ./
       dockerfile: dockerfiles/cats-main.dockerfile
@@ -21,7 +21,7 @@ services:
     build:
       context: ./
       dockerfile: dockerfiles/postgres.dockerfile
-    env-file: .env
+    env_file: .env
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     volumes:
@@ -40,7 +40,7 @@ services:
     container_name: cats-judge
     privileged: true
     image: registry.mesenev.ru/mesenev/cats-judge:latest
-    env-file: .env
+    env_file: .env
     depends_on:
       postgres:
         condition: service_healthy
