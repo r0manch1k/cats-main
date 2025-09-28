@@ -1,4 +1,4 @@
-FROM postgres:17
+FROM postgres:18
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -14,8 +14,6 @@ RUN apt-get install -y \
     && apt-get clean
 
 RUN cpanm --notest -S YAML::Tiny Module::Install DBI DBI::Profile DBD::Pg
-
-EXPOSE 5432
 
 WORKDIR /app
 
