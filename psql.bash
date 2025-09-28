@@ -11,7 +11,7 @@ fi
 
 # Change docker subnet if it's different
 echo "Configuring PostgreSQL..."
-echo -e "host $POSTGRES_DB $POSTGRES_USER 172.19.0.0/16 md5\nhost $POSTGRES_DB $POSTGRES_USER 127.0.0.1/32 md5\nlocal all postgres peer" > /tmp/pg_hba.tmp  && mv /tmp/pg_hba.tmp /etc/postgresql/17/main/pg_hba.conf
+echo -e "host $POSTGRES_DB $POSTGRES_USER 172.19.0.0/16 md5\nhost $POSTGRES_DB $POSTGRES_USER 127.0.0.1/32 md5\nlocal all postgres peer" > /tmp/pg_hba.tmp  && mv /tmp/pg_hba.tmp /etc/postgresql/18/main/pg_hba.conf
 
 echo "Reloading PostgreSQL configuration..."
 service postgresql reload
