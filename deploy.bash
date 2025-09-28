@@ -209,8 +209,8 @@ EOF
 	sudo chgrp -R ${http_group} cgi-bin css download images static tt
 	chmod -R g+r cgi-bin
 	chmod g+rw static tt download/{,att,f,img,pr,vis} cgi-bin/rank_cache{,/r} cgi-bin/repos
-	sudo service apache2 reload
-	sudo service apache2 restart
+#	sudo service apache2 reload
+#	sudo service apache2 restart
 	echo "ok"
 else
 	echo "skip"
