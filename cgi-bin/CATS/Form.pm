@@ -263,6 +263,9 @@ sub save {
     return $self->{override_save}->($self, $id, $data, %opts) if $self->{override_save};
     my $i = 0;
     my $db_data = { map { $_->{db_name} => $_->save($data->[$i++]) } $self->fields };
+    if (exists $db_data->{in_contests} && $db_data->{in_contests} eq '') {
+        $db_data->{in_contests} = 0;
+    }
     $self->{before_save_db}->($db_data, $id, $self) if $self->{before_save_db};
     # INSERT does not support table aliases.
     my ($bare_table) = $self->{table} =~ /^(\w+)/;
