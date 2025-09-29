@@ -1,6 +1,6 @@
 FROM postgres:18
-
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PGDATESTYLE="ISO, DMY"
 
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update && apt-get install -y gnupg
 
