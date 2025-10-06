@@ -202,8 +202,8 @@ sub try_set_state {
     my $job_id = CATS::Job::create($cats::job_type_manual_verdict, {
         state => $cats::job_st_finished,
         req_id => $p->{rid},
-        start_time => \'CURRENT_TIME',
-        finish_time => \'CURRENT_TIME',
+        start_time => \'CURRENT_TIMESTAMP',
+        finish_time => \'CURRENT_TIMESTAMP',
     });
     my $msg = join ', ', map sprintf('%s: %s', @$_), grep $_->[1],
         [ verdict => $p->{state} ], [ points => $p->{points} ],
