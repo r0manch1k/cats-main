@@ -26,6 +26,21 @@ my $half_minute = 0.5 / 24 / 60;
 sub format_diff {
     my ($dt, %opts) = @_;
     $dt or return '';
+
+    #warn "format_diff called with: " . (defined $dt ? $dt : 'undef');
+
+    if (!ref($dt) && $dt =~ /^(\d+) days? ((\d+):(\d+):(\d+(?:\.\d+)?))$/) {
+        my ($days, $hours, $minutes, $seconds) = ($1, $3, $4, $5);
+        $dt = $days + ($hours * 3600 + $minutes * 60 + $seconds) / 86400;
+    }
+    elsif (!ref($dt) && $dt =~ /^(\d+):(\d+):(\d+(?:\.\d+)?)$/) {
+        my ($hours, $minutes, $seconds) = ($1, $2, $3);
+        $dt = ($hours * 3600 + $minutes * 60 + $seconds) / 86400;
+    }
+    if (!ref($dt) && $dt !~ /^-?\d+(?:\.\d+)?$/) {
+        return '';
+    }
+
     my $sign = $dt < 0 ? '-' : $opts{display_plus} ? '+' : '';
     $dt = abs($dt) + ($opts{seconds} ? 0 : $half_minute);
     my $days = int($dt);
@@ -46,20 +61,20 @@ sub format_diff_ext {
     format_diff($diff, %opts) . ($ext ? ' ... ' . format_diff($ext, %opts) : '');
 }
 
-sub timer_start { [ Time::HiRes::gettimeofday ] }
-sub timer_since { Time::HiRes::tv_interval($_[0], [ Time::HiRes::gettimeofday ]) }
-sub timer_fmt { sprintf('%.3fs', $_[0] || 0) }
+sub timer_start {[ Time::HiRes::gettimeofday ]}
+sub timer_since {Time::HiRes::tv_interval($_[0], [ Time::HiRes::gettimeofday ])}
+sub timer_fmt {sprintf('%.3fs', $_[0] || 0)}
 
 my ($start_time, $init_time);
 
-sub mark_start { $start_time = timer_start }
+sub mark_start {$start_time = timer_start}
 
-sub mark_init { $init_time = timer_since($start_time) }
+sub mark_init {$init_time = timer_since($start_time)}
 
 sub mark_finish {
     $t->param(
         request_process_time => timer_fmt(timer_since($start_time)),
-        init_time => timer_fmt($init_time),
+        init_time            => timer_fmt($init_time),
     );
     prepare_server_time;
 }
