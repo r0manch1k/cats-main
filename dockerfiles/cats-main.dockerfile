@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update && apt-get install -y gnupg
 
 RUN apt-get install -y \
-    sudo \
+    sudo dnsutils \ 
     wget \
     curl \
     git \
