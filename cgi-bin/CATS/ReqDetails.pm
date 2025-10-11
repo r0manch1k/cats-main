@@ -136,9 +136,20 @@ sub _get_nearby_attempt {
     ) or return;
     for ($na->{submit_time}) {
         s/\s*$//;
-        # If the date is the same with the current run, display only time.
-        my ($n_date, $n_time) = /^(\d+\.\d+\.\d+\s+)(.*)$/;
-        $si->{"${prevnext}_attempt_time"} = $si->{submit_time} =~ /^$n_date/ ? $n_time : $_;
+        
+        # ISO 
+        if (my ($year, $month, $day, $time) = /^(\d{4})-(\d{2})-(\d{2})\s+(.*)$/) {
+            my $n_date = "$day.$month.$year ";
+            my $n_time = $time;
+            
+            if ($si->{submit_time} =~ /^\Q$n_date\E/) {
+                $si->{"${prevnext}_attempt_time"} = $n_time;
+            } else {
+                $si->{"${prevnext}_attempt_time"} = "$day.$month.$year $time";
+            }
+        } else {
+            $si->{"${prevnext}_attempt_time"} = $_;
+        }
     }
     my @ep = $extra_params ? @$extra_params : ();
     if ($p->{f} eq 'diff_runs') {
