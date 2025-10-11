@@ -97,7 +97,7 @@ sub problems_retest_frame {
                 WHERE R.contest_id = CP.contest_id AND R.problem_id = CP.problem_id AND
                 R.state < $cats::request_processed) AS in_queue
         FROM problems P INNER JOIN contest_problems CP ON CP.problem_id = P.id
-        WHERE CP.contest_id = ?~ . $lv->maybe_where_cond . $lv->order_by);
+        WHERE CP.contest_id = ?~ .' ' . $lv->maybe_where_cond . ' ' . $lv->order_by);
     $sth->execute($cid, $lv->where_params);
 
     my $total_queue = 0;
