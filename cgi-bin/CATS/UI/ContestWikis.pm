@@ -88,7 +88,7 @@ sub contest_wikis_frame {
         SELECT CW.id, CW.wiki_id, CW.allow_edit, CW.ordering, W.name
         FROM contest_wikis CW
         INNER JOIN wiki_pages W ON W.id = CW.wiki_id
-        WHERE CW.contest_id = ?~ . $lv->maybe_where_cond . $lv->order_by);
+        WHERE CW.contest_id = ? ~ . $lv->maybe_where_cond . $lv->order_by);
     $sth->execute($cid, $lv->where_params);
 
     my $fetch_record = sub {
