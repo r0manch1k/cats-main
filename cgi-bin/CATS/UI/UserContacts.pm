@@ -96,7 +96,7 @@ sub user_contacts_frame {
         SELECT C.id, C.contact_type_id, C.handle, C.is_public, C.is_actual, CT.name AS type_name, CT.url
         FROM contacts C
         INNER JOIN contact_types CT ON CT.id = C.contact_type_id
-        WHERE C.account_id = ?$public_cond~ . ' ' . $lv->maybe_where_cond . ' ' . $lv->order_by);
+        WHERE C.account_id = ? $public_cond ~ . ' ' . $lv->maybe_where_cond . ' ' . $lv->order_by);
     $sth->execute($p->{uid}, $lv->where_params);
 
     my $fetch_record = sub {
