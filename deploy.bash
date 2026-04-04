@@ -201,6 +201,8 @@ EOF
 	sudo a2dissite 000-default
 	sudo a2enmod expires
 	sudo a2enmod apreq2
+	sudo a2dismod mpm_event
+	sudo a2enmod mpm_prefork
 
 	echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/servername.conf
 	sudo a2enconf servername
