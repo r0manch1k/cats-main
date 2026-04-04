@@ -214,7 +214,7 @@ sub similarity_frame {
             (SELECT RL.from_id FROM relations RL
             WHERE RL.rel_type = $CATS::Globals::relation->{upsolves_for} AND
                 RL.to_id = CA.account_id AND RL.from_ok = 1 AND RL.to_ok = 1
-                ROWS 1) AS upsolver
+                LIMIT 1) AS upsolver
         FROM contest_accounts CA INNER JOIN accounts A ON CA.account_id = A.id
         LEFT JOIN sites S ON CA.site_id = S.id ~;
     my $users = $dbh->selectall_arrayref(qq~
