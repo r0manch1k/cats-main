@@ -3,6 +3,7 @@ package CATS::Settings;
 use strict;
 use warnings;
 
+use JSON::XS;
 use Exporter qw(import);
 
 our @EXPORT_OK = qw($settings);
@@ -26,9 +27,18 @@ sub init {
         $enc_settings = $cookie || '';
         $enc_settings = decode_base64($enc_settings) if $enc_settings;
     }
+    
     # If any problem happens during the thaw, clear settings.
-    $settings = eval { $enc_settings && Storable::thaw($enc_settings) } || {};
-
+    $settings = eval {
+        $enc_settings && length($enc_settings) > 2  # "{}" = минимальный валидный JSON
+            ? JSON::XS::decode_json($enc_settings)
+            : {}
+    } || do {
+        warn "[SETTINGS] Reset for uid=$uid: invalid data (old Storable or corrupted)";
+        {};
+    };
+    
+    $settings = {} unless ref($settings) eq 'HASH';
     $settings->{lang} = $lang if $lang && grep $_ eq $lang, @cats::langs;
 }
 
@@ -41,21 +51,49 @@ sub as_cookie {
         -expires => '+1h');
 }
 
+sub as_json { JSON::XS::encode_json($settings) }
+
 sub as_storable { Storable::nfreeze($settings) }
 
 sub save {
-    my $new_enc_settings = as_storable;
-    $new_enc_settings ne ($enc_settings || '') or return;
-    $enc_settings = $new_enc_settings;
-    $uid or return; # Cookie only for anonymous users.
+    my $new_json = as_json;
+
+    $new_json eq ($enc_settings || '{}') and return;
+
+    $enc_settings = $new_json; 
+
+    $uid or return;
+
     $dbh->commit;
+
     eval {
         $dbh->do(q~
-            UPDATE accounts SET settings = ? WHERE id = ?~, undef,
-            $new_enc_settings, $uid);
+            UPDATE accounts SET settings = ? WHERE id = ?
+        ~, undef, $new_json, $uid);
         $dbh->commit;
-    } or $CATS::DB::db->catch_deadlock_error("save settings for $uid");
+    } or do {
+        my $err = $@ || $DBI::errstr;
+        $dbh->rollback;
+        $CATS::DB::db->catch_deadlock_error("save settings for $uid: $err");
+    };
 }
+##	sub save {
+#
+#	    warn "trying to save settings for user: " . $uid . " " . $settings->{contest_id};
+#	    my $new_enc_settings = as_storable;
+#	    $new_enc_settings ne ($enc_settings || '') or return;
+#	    $enc_settings = $new_enc_settings;
+#	    $uid or return; # Cookie only for anonymous users.
+#	    $dbh->commit;
+#	    eval {
+#		$dbh->do(q~
+#		    UPDATE accounts SET settings = ? WHERE id = ?~, undef,
+#		    $new_enc_settings, $uid);
+#		$dbh->commit;
+#	    } or $CATS::DB::db->catch_deadlock_error("save settings for $uid");
+#
+#	    warn "Settings saved!";
+#	}
 
 sub _apply_rec {
     my ($val, $sub) = @_;
