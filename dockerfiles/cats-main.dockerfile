@@ -34,4 +34,4 @@ RUN chmod -R 775 /app
 # not precisely default practice but we prefer errors log then access to avoid useless log overflow
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/error.log
 
-CMD apachectl -D FOREGROUND
+CMD ["apachectl", "-D", "FOREGROUND"]
