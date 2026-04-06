@@ -216,7 +216,7 @@ sub user_relations_frame {
           (SELECT A.team_name FROM accounts A WHERE A.id = R.from_id) AS from_name,
           (SELECT A.team_name FROM accounts A WHERE A.id = R.to_id) AS to_name
         FROM relations R
-        WHERE R.from_id = ? OR R.to_id = ?~ . $lv->maybe_where_cond . $lv->order_by);
+        WHERE R.from_id = ? OR R.to_id = ? ~ . $lv->maybe_where_cond . $lv->order_by);
     $sth->execute($p->{uid}, $p->{uid}, $lv->where_params);
 
     my @pp = (uid => $p->{uid});
