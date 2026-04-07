@@ -174,7 +174,7 @@ sub _console_content {
         # Security: During the contest, show teams only accepted/rejected
         # instead of specific results of other teams.
         my $hide_verdict =
-            $contest->{time_since_defreeze} <= 0 && !$is_jury &&
+            ($contest->{time_since_defreeze} // 0) <= 0 && !$is_jury &&
             (!$user->{is_participant} || !$team_id || $team_id != ($uid // 0));
         my $true_short_state = $CATS::Verdicts::state_to_name->{$request_state} || '';
         my $short_state =
