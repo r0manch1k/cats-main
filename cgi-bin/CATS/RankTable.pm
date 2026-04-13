@@ -275,9 +275,9 @@ sub get_contests_info {
     $self->{frozen} = $self->{not_started} = $self->{has_practice} = $self->{show_points} = 0;
     my $sth = $dbh->prepare(qq~
         SELECT C.id, C.title, CAST(C.start_date AS DATE) AS start_date,
-          CAST(CURRENT_TIMESTAMP - C.freeze_date AS DOUBLE PRECISION) AS since_freeze,
-          CAST(CURRENT_TIMESTAMP - C.defreeze_date AS DOUBLE PRECISION) AS since_defreeze,
-          CAST(CURRENT_TIMESTAMP - $CATS::Time::contest_start_offset_sql AS DOUBLE PRECISION) AS since_start,
+        COALESCE(CAST(CURRENT_TIMESTAMP - C.freeze_date AS DOUBLE PRECISION), -1) AS since_freeze,
+        COALESCE(CAST(CURRENT_TIMESTAMP - C.defreeze_date AS DOUBLE PRECISION), 9999999) AS since_defreeze,
+        COALESCE(CAST(CURRENT_TIMESTAMP - $CATS::Time::contest_start_offset_sql AS DOUBLE PRECISION), -1) AS since_start,
           CA.is_jury, CA.id AS caid,
           C.is_hidden, C.rules, C.ctype, C.show_all_results, C.show_flags, C.req_selection, C.show_is_remote
         FROM contests C
