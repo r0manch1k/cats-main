@@ -398,7 +398,7 @@ sub registration_frame {
     $settings->{contests}->{filter} = 'my' if $has_clist;
     $u->{settings} = CATS::Settings::as_storable($settings);
     $u->insert(undef, commit => !$has_clist) or return msg(1249);
-    CATS::Contest::Participate::multi_online($u->{id}, $p->{clist}) or return msg(1249);
+    !$has_clist || CATS::Contest::Participate::multi_online($u->{id}, $p->{clist}) or return msg(1249);
     $t->param(successfully_registered => 1);
 }
 
