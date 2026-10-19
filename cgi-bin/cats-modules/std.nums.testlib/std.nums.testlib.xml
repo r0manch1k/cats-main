@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<CATS version="1.4">
+<Problem title="Testlib: nums" lang="en" author="A. Klenin"
+  tlimit="1" mlimit="64" inputFile="input.txt" outputFile="output.txt">
+
+<ProblemStatement>
+You are to write a problem that reads two positive integers $A$ and $B$ with no more 
+then five decimal digits and outputs their sum $A + B$.
+</ProblemStatement>
+
+<InputFormat>
+First line of input file contains two integers $A$ and $B$.
+</InputFormat>
+
+<OutputFormat>
+Output file must contain a single integer $C = A + B$.
+</OutputFormat>
+
+<ProblemConstraints>
+$-10000 \le A, B \le 10000$
+</ProblemConstraints>
+
+<Sample rank="1">
+    <SampleIn>3 5</SampleIn>
+    <SampleOut>8</SampleOut>
+</Sample>
+
+<Module src="testlib.pas" type="checker" de_code="1" export="std.testlib.1.1" />
+
+<Solution name="sol" src="sum.pl" />
+<Checker src="nums.pl" style="testlib" export="std.nums.testlib" />
+
+<Test rank="1"><In src="1.tst" /><Out src="1.ans" /></Test>
+<Test rank="2"><In src="2.tst" /><Out src="2.ans" /></Test>
+<Test rank="3"><In src="3.tst" /><Out src="3.ans" /></Test>
+
+</Problem>
+</CATS>
