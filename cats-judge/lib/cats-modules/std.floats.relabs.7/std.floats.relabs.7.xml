@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<CATS version="1.4">
+<Problem title="Default: floats.relabs.7" lang="en" author="A. Klenin"
+  tlimit="1" mlimit="64" 
+  inputFile="input.txt" outputFile="output.txt">
+
+<Solution name="sol" src="sol.dpr"/>
+<Checker src="floats7.dpr" style="testlib" export="std.floats.relabs.7" />
+
+<TestRange from="1" to="5"><In src="%0n.in"/><Out use="sol"/></TestRange>
+
+</Problem>
+</CATS>

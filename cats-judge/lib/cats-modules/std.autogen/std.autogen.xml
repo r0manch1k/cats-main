@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<CATS version="1.2">
+<Problem title="EasyGen" lang="ru"
+  author="I. Tuphanov" tlimit="5" mlimit="64"
+  inputFile="input.txt" outputFile="output.txt">
+
+<ProblemStatement>
+<p>
+ababaca
+</p>
+</ProblemStatement>
+
+<ProblemConstraints>
+</ProblemConstraints>
+
+<InputFormat>
+</InputFormat>
+
+<FormalInput>
+integer name = m, range = [1, 100]; 
+newline;
+string name = s, lenrange = m, chars = {A-Z}; 
+newline;
+seq name = seq1, length = m;
+   string name = type, lenrange = 1, chars = {A-Z};
+   integer name = x, range = [-100, 100];
+   integer name = y, range = [0, 100];
+   newline;   
+end;
+</FormalInput>
+
+<OutputFormat>
+</OutputFormat>
+
+<Solution name="sol" src="sol.cpp" />
+<Import guid="std.strs" type="checker" />
+<Generator export="std.autogen" name="gen" src="gen.cpp" outputFile="*STDOUT"/>
+<Module export="std.parser.h" type="generator" src="parser.h" de_code="1" />
+<Module export="std.easygen.h" type="generator" src="easygen.h" de_code="1" />
+<Module export="std.parser.lib" type="generator" src="parser.lib" de_code="1" />
+<Module export="std.easygen.cpp" type="generator" src="easygen.cpp" de_code="1" />
+
+<Test rank="1"><In use="gen" param="1654331 10 1 3"/><Out use="sol"/></Test>
+<Test rank="2"><In use="gen" param="1654331 10 1 3"/><Out use="sol"/></Test>
+<Test rank="3"><In use="gen" param="1654331 10 1 3"/><Out use="sol"/></Test>
+<Test rank="4"><In use="gen" param="1654331 10 1 3"/><Out use="sol"/></Test>
+
+</Problem>
+</CATS>

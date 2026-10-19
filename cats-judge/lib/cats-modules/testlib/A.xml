@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<CATS version="1.8">
+<Problem title="Testlib. Pascal: 1.9; C/C++: 0.3.3, 0.4.3, 0.6.2, 0.7.4; Java: 4" lang="en"
+  tlimit="1" mlimit="64" inputFile="input.txt" outputFile="output.txt">
+
+<ProblemStatement>
+You are to write a problem that reads two positive integers $A$ and $B$ with no more 
+then five decimal digits and outputs their sum $A + B$.
+</ProblemStatement>
+
+<InputFormat>
+First line of input file contains two integers $A$ and $B$.
+</InputFormat>
+
+<OutputFormat>
+Output file must contain a single integer $C = A + B$.
+</OutputFormat>
+
+<ProblemConstraints>
+$-10000 \le A, B \le 10000$
+</ProblemConstraints>
+
+<Sample rank="1">
+    <SampleIn>3 5</SampleIn>
+    <SampleOut>8</SampleOut>
+</Sample>
+
+<Module src="testlib.pas" type="checker" de_code="1" export="std.testlib.pas.1.9"/>
+<Module src="testlib_winter_2009/testlib.pas" type="checker" de_code="1" export="std.testlib.pas.winter.2009"/>
+<Module src="testlib_0_4_3/testlib.h" type="checker" de_code="1" export="std.testlib.h.0.4.3"/>
+<Module src="testlib_0_3_3/testlib.h" type="checker" de_code="1" export="std.testlib.h.0.3.3"/>
+<Module src="testlib_0_6_2/testlib.h" type="checker" de_code="1" export="std.testlib.h.0.6.2"/>
+<Module src="testlib_0_7_4/testlib.h" type="checker" de_code="1" export="std.testlib.h.0.7.4"/>
+<Module src="testlib4j.jar" type="checker" de_code="1" export="std.testlib.jar"/>
+<Module src="neerc2010/testlib4j.jar" type="checker" de_code="1" export="std.testlib.jar.neerc2010"/>
+<Module src="testlib.h" type="validator" de_code="1" export="std.validator.testlib.h.last"/>
+<Module src="testlib.h" type="checker" de_code="1" export="std.testlib.h.last"/>
+
+<Solution name="sol" src="sum.cpp"/>
+<Checker src="ncmp.cpp" style="testlib"/>
+
+<Test rank="1-3"><In src="%n.tst"/><Out use="sol"/></Test>
+
+</Problem>
+</CATS>
