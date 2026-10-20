@@ -83,18 +83,8 @@ else
 	echo "skip"
 fi
 
-echo "3. Init and update submodules... "
+echo "3. Install formal input... "
 if [[ $step =~ (^|,)3(,|$) || $step == "*" ]]; then
-	git submodule init
-	git submodule update
-	echo "ok"
-else
-	echo "skip"
-fi
-
-
-echo "4. Install formal input... "
-if [[ $step =~ (^|,)4(,|$) || $step == "*" ]]; then
 	formal_input='https://github.com/downloads/klenin/cats-main/FormalInput.tgz'
 	wget $formal_input -O fi.tgz
 	tar -xzvf fi.tgz
@@ -110,8 +100,8 @@ else
 	echo "skip"
 fi
 
-echo "5. Generating docs... "
-if [[ $step =~ (^|,)5(,|$) || $step == "*" ]]; then
+echo "4. Generating docs... "
+if [[ $step =~ (^|,)4(,|$) || $step == "*" ]]; then
 	cd docs/tt
 	ttree -f ttreerc
 	cd $CATS_ROOT
@@ -120,8 +110,8 @@ else
 	echo "skip"
 fi
 
-echo "6. Configure Apache... "
-if [[ $step =~ (^|,)6(,|$) || $step == "*" ]]; then
+echo "5. Configure Apache... "
+if [[ $step =~ (^|,)5(,|$) || $step == "*" ]]; then
 APACHE_CONFIG=$(cat <<EOF
 PerlSetEnv CATS_DIR ${CATS_ROOT}/cgi-bin/
 <VirtualHost *:80>
@@ -218,8 +208,8 @@ else
 	echo "skip"
 fi
 
-echo "7. Download JS... "
-if [[ $step =~ (^|,)7(,|$) || $step == "*" ]]; then
+echo "6. Download JS... "
+if [[ $step =~ (^|,)6(,|$) || $step == "*" ]]; then
     perl -e 'install_js.pl --install=all'
 	cd $CATS_ROOT
 	echo "ok"
