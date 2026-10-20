@@ -19,3 +19,5 @@ dockerfiles/main/Config.pm
 .env.local
 
 venv
+
+.idea/
